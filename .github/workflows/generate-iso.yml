@@ -30,6 +30,7 @@ jobs:
           image_name: thinkblue
           image_tag: latest
           variant: silverblue
+          version: 44
           iso_name: ${{ steps.filename.outputs.iso_name }}
 
       - name: Upload ISO as Artifact
