@@ -1,0 +1,41 @@
+name: Generate Installer ISO
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-iso:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Generate ISO Filename
+        id: filename
+        run: |
+          BUILD_DATE=$(date +%Y-%m-%d)
+          ISO_NAME="thinkblue-x86_64-${BUILD_DATE}.iso"
+          echo "iso_name=$ISO_NAME" >> $GITHUB_OUTPUT
+
+      - name: Build Container Installer ISO
+        id: build
+        uses: jasonn3/build-container-installer@v1
+        with:
+          arch: x86_64
+          image_repo: ghcr.io/crian
+          image_name: thinkblue
+          image_tag: latest
+          variant: silverblue
+          iso_name: ${{ steps.filename.outputs.iso_name }}
+
+      - name: Upload ISO as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.filename.outputs.iso_name }}
+          path: |
+            ${{ steps.build.outputs.iso_path }}/${{ steps.filename.outputs.iso_name }}
+            
