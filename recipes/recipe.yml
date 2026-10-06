@@ -32,6 +32,7 @@ modules:
         - ghostty-nautilus
         - gnome-tweaks
         - lm_sensors
+        - make
         - micro
         - nautilus-python
         - nethogs
