@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Generate ISO Filename
         id: filename
@@ -34,7 +34,7 @@ jobs:
           iso_name: ${{ steps.filename.outputs.iso_name }}
 
       - name: Upload ISO as Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.filename.outputs.iso_name }}
           path: |
