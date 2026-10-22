@@ -28,6 +28,7 @@ modules:
         - eza
         - fastfetch
         - fd-find
+        - fish
         - ghostty
         - ghostty-nautilus
         - gnome-tweaks
