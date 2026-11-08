@@ -3,18 +3,19 @@
 [![build-thinkblue](https://github.com/crian/thinkblue/actions/workflows/build.yml/badge.svg)](https://github.com/crian/thinkblue/actions/workflows/build.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-A slim, everyday-driver [Universal Blue](https://universal-blue.org/) Silverblue image for my ThinkPad, built with [BlueBuild](https://blue-build.org/).
+A slim, everyday-driver [BlueBuild](https://blue-build.org/) Silverblue image for my ThinkPad.
 
-It is based on [`ublue-os/silverblue-main`](https://github.com/ublue-os/main) and only changes what I actually care about: a few swapped apps, a different terminal, and Flatpaks for the rest. Everything else stays close to upstream.
+It is based on [`ghcr.io/blue-build/base-images/fedora-silverblue`](https://github.com/blue-build/base-images) and only changes what I actually care about: a few swapped apps, a different terminal, and Flatpaks for the rest. Everything else stays close to upstream.
 
 ## What's inside
 
-- **Base:** `ghcr.io/ublue-os/silverblue-main:latest`
+- **Base:** `ghcr.io/blue-build/base-images/fedora-silverblue:latest`
 - **Terminal:** [Ghostty](https://ghostty.org/), installed from the [Terra](https://terra.fyrox.dev/) repository
-- **Removed:** Firefox, Ptyxis and GNOME Software
-- **Flatpaks:** Google Chrome and [Bazaar](https://github.com/kolunmi/bazaar) (as the app store replacement)
+- **Removed:** Firefox, Ptyxis, GNOME Software, htop, nvtop, gnome-system-monitor, gnome-classic-session, GNOME Shell classic extensions
+- **Added (DNF):** bat, btop, eza, fastfetch, fd-find, fish, ghostty, gnome-tweaks, lm_sensors, micro, nautilus-python, nethogs, ripgrep, starship, xdg-terminal-exec, zoxide
+- **Flatpaks (system):** Google Chrome, Bazaar (app store), Flatseal, ExtensionManager, MissionCenter, GNOME core apps (Calculator, Calendar, Loupe, Papers, TextEditor, Weather), adw-gtk3 themes
 
-The full definition lives in [`recipes/recipe.yml`](recipes/recipe.yml); additional files and modules are in [`files/`](files/) and [`modules/`](modules/).
+The full definition lives in [`recipes/recipe.yml`](recipes/recipe.yml); additional files are in [`files/`](files/).
 
 ## Installation
 
@@ -23,27 +24,17 @@ The full definition lives in [`recipes/recipe.yml`](recipes/recipe.yml); additio
 
 To rebase an existing Fedora Atomic installation to the latest build:
 
-1. Rebase to the unsigned image first, so the proper signing keys and policies get installed:
+1. Switch to the unsigned image first to enroll the signing key via MOK:
 
    ```bash
-   rpm-ostree rebase ostree-unverified-registry:ghcr.io/crian/thinkblue:latest
-   ```
-
-2. Reboot:
-
-   ```bash
+   sudo bootc switch ghcr.io/crian/thinkblue:latest
    systemctl reboot
    ```
 
-3. Rebase to the signed image:
+2. After reboot, enroll the MOK key when prompted (password you set during build), then switch to the signed image:
 
    ```bash
-   rpm-ostree rebase ostree-image-signed:docker://ghcr.io/crian/thinkblue:latest
-   ```
-
-4. Reboot again to finish the installation:
-
-   ```bash
+   sudo bootc switch --enforce-container-sigpolicy ghcr.io/crian/thinkblue:latest
    systemctl reboot
    ```
 
@@ -65,7 +56,7 @@ Dependabot keeps the GitHub Actions used by the build workflow up to date.
 Images are signed with [Sigstore](https://www.sigstore.dev/)'s [cosign](https://github.com/sigstore/cosign). To verify a build, download [`cosign.pub`](cosign.pub) from this repository and run:
 
 ```bash
-cosign verify --key cosign.pub ghcr.io/crian/thinkblue
+cosign verify --key cosign.pub ghcr.io/crian/thinkblue:latest
 ```
 
 ## Building your own
