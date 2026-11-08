@@ -36,6 +36,7 @@ modules:
         - micro
         - nautilus-python
         - nethogs
+        - opencode-cli
         - ripgrep
         - starship
         - xdg-terminal-exec
